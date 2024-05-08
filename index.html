@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">Calculator</h1>
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control mb-5"
+            id="expression"
+            readonly
+          />
+          <div class="row justify-content-end">
+            <div class="col-3 mb-3">
+              <button class="btn btn-danger btn-block" onclick="clearDisplay()">
+                C
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('7')"
+              >
+                7
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('8')"
+              >
+                8
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('9')"
+              >
+                9
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-warning btn-block"
+                onclick="appendToDisplay('+')"
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('4')"
+              >
+                4
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('5')"
+              >
+                5
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('6')"
+              >
+                6
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-warning btn-block"
+                onclick="appendToDisplay('-')"
+              >
+                -
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('1')"
+              >
+                1
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('2')"
+              >
+                2
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('3')"
+              >
+                3
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-warning btn-block"
+                onclick="appendToDisplay('*')"
+              >
+                *
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('0')"
+              >
+                0
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-secondary btn-block"
+                onclick="appendToDisplay('.')"
+              >
+                .
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button class="btn btn-primary btn-block" onclick="calculate()">
+                =
+              </button>
+            </div>
+            <div class="col mb-3">
+              <button
+                class="btn btn-warning btn-block"
+                onclick="appendToDisplay('/')"
+              >
+                /
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      function appendToDisplay(value) {
+        document.getElementById("expression").value += value;
+      }
+
+      function calculate() {
+        let expression = document.getElementById("expression").value;
+        fetch("/calculate", {
+          method: "POST",
+          body: new URLSearchParams({ expression: expression }),
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if ("result" in data) {
+              document.getElementById("expression").value = data["result"];
+            } else if ("error" in data) {
+              alert(data["error"]);
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function clearDisplay() {
+        document.getElementById("expression").value = "";
+      }
+    </script>
+  </body>
+</html>
