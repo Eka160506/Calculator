@@ -174,22 +174,15 @@
       }
 
       function calculate() {
-        let expression = document.getElementById("expression").value;
-        fetch("/calculate", {
-          method: "POST",
-          body: new URLSearchParams({ expression: expression }),
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if ("result" in data) {
-              document.getElementById("expression").value = data["result"];
-            } else if ("error" in data) {
-              alert(data["error"]);
-            }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+  let expression = document.getElementById("expression").value;
+  try {
+    const result = eval(expression); // Evaluates the expression
+    document.getElementById("expression").value = result;
+  } catch (error) {
+    alert("Invalid expression");
+  }
+}
+
 
       function clearDisplay() {
         document.getElementById("expression").value = "";
